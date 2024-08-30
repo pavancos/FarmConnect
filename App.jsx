@@ -1,30 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { TailwindProvider } from 'tailwind-rn';
-import utilities from './tailwind.json';
-import {useTailwind} from 'tailwind-rn';
+import {
+  Button,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
 import Home from './components/Home/Home';
 
 export default function App() {
   return (
-    <TailwindProvider value={utilities}>
-      <StatusBar></StatusBar>
-      <View className="flex-1 flex-col items-center justify-center mt-6  bg-yellow-50">
-        <View className="bg-green-600 w-full p-9">
+    <SafeAreaView>
+      <View className="bg-yellow-50">
+        <View className="bg-green-600 w-full py-5">
+          <Text className="text-white font-bold text-2xl text-center shadow shadow-black">FarmConnect</Text>
         </View>
-        <Home></Home>
+        <Home />
       </View>
-      
-    </TailwindProvider>
+      <StatusBar
+        animated={true}
+        backgroundColor="#419A5F"
+        barStyle="dark-content"
+        showHideTransition="slide"
+        hidden={false}
+      />
+    </SafeAreaView>
+
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#EBEAD4',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   }
-
-// });
