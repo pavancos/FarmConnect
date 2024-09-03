@@ -48,19 +48,6 @@ const Home = () => {
           </View>
 
         </View>
-
-        {
-          isTheButtonPressed &&
-          <View 
-            className="
-              w-96 rounded-lg flex flex-col items-center p-2 border border-1
-            "
-            style={{backgroundColor: 'rgba(0, 0, 0, 0.1)', borderColor: 'rgba(0, 0, 0, 0.1)'}}
-          >
-            <ProductListing isTheButtonPressed={isTheButtonPressed} ></ProductListing>
-          </View>
-
-        }
       </View>
 
     </ScrollView>

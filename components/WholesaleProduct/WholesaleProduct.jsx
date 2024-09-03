@@ -7,7 +7,6 @@ export default WholesaleProduct = ({crop}) => {
     const TomatoPNG = require("../../assets/vegetables/tomato.jpg");
     return (
         <View
-            key={crop.id}
             className=" border border-1  w-full py-1 rounded-md flex flex-row gap-2 items-center"
             style={{
                 backgroundColor: '#8b987e', margin: 0, padding: 0,
