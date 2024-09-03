@@ -1,0 +1,568 @@
+// File: \Users\pavan\Documents\GitHub\FarmConnect\App.jsx
+import {
+  Button,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
+import Home from './components/Home/Home';
+
+export default function App() {
+  return (
+    <SafeAreaView>
+      <View className="bg-yellow-50">
+        <View className="bg-green-600 w-full py-5">
+          <Text className="text-white font-bold text-2xl text-center shadow shadow-black">FarmConnect</Text>
+        </View>
+        <Home />
+      </View>
+      <StatusBar
+        animated={true}
+        backgroundColor="#419A5F"
+        barStyle="dark-content"
+        showHideTransition="slide"
+        hidden={false}
+      />
+    </SafeAreaView>
+
+  );
+}
+
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\Home\Home.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, ScrollView } from 'react-native';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import ProductListing from '../ProductListing/ProductListing';
+
+const Home = () => {
+
+  const [isTheButtonPressed, setIsTheButtonPressed] = useState(false);
+
+  function onPress() {
+    if (isTheButtonPressed) {
+      setIsTheButtonPressed(false);
+    } else {
+      setIsTheButtonPressed(true);
+    }
+  }
+
+  return (
+    <ScrollView  className='h-screen w-full bg-yellow-50 pt-3 pb-6'>
+      <View className="bg-yellow-50  flex flex-1 flex-col gap-2 items-center mb-40">
+        <View className="w-96  rounded-lg flex flex-col items-center p-2 py-4 border border-1"
+          style={{backgroundColor: 'rgba(0, 0, 0, 0.1)', borderColor: 'rgba(0, 0, 0, 0.1)'}}
+        >
+          <View>
+            <Text className="text-black font-bold text-xl text-center mt-4">Welcome to FarmConnect</Text>
+          </View>
+          <View>
+            <Text className="text-black font-light text-md text-center mt-1">One Stop Platform for all Market Access</Text>
+          </View>
+
+          <View >
+            <Pressable
+              onPress={onPress}
+              className="
+                bg-yellow-100 border-black rounded-3xl
+                flex flex-row justify-center
+                items-center mt-8 mb-4 p-2 
+                active:bg-yellow-200 active:shadow-lg active:ring-2 active:ring-yellow-300
+              "
+              style={{
+                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                shadowOpacity: 1, shadowRadius: 2, elevation: 5
+            }}
+            >
+              <Text >Go to Listing Page</Text>
+            </Pressable>
+          </View>
+
+        </View>
+
+        {
+          isTheButtonPressed &&
+          <View 
+            className="
+              w-96 rounded-lg flex flex-col items-center p-2 border border-1
+            "
+            style={{backgroundColor: 'rgba(0, 0, 0, 0.1)', borderColor: 'rgba(0, 0, 0, 0.1)'}}
+          >
+            <ProductListing isTheButtonPressed={isTheButtonPressed} ></ProductListing>
+          </View>
+
+        }
+      </View>
+
+    </ScrollView>
+  );
+}
+
+export default Home;
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\ProductListing\ProductListing.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-native';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import RetailProduct from '../RetailProduct/RetailProduct';
+import WholesaleProduct from '../WholesaleProduct/WholesaleProduct';
+
+const ProductListing = ({ isTheButtonPressed }) => {
+  const [cropListing, setCropListing] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+
+  useEffect(() => {
+    fetch('https://8p0ch0bz-3000.inc1.devtunnels.ms/getListings')
+      .then((response) => response.json())
+      .then((json) => setCropListing(json.cropListings))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <View className="w-full flex flex-col items-center">
+      <Text className="font-bold text-2xl text-black mb-5">Retail Listing</Text>
+      <View className="flex flex-col items-center gap-4 w-full ">
+        {cropListing.map((crop, index) => {
+          if (crop.TypeOfListing === 'Retail') {
+            return (
+              <View
+                className="w-full mx-auto"
+              >
+                <RetailProduct key={crop._id} crop={crop} />
+              </View>
+            )
+          } else {
+            return (
+              <View
+                className="w-full mx-auto"
+              >
+                <WholesaleProduct key={index} crop={crop} />
+              </View>
+            )
+          }
+        }
+        )}
+      </View>
+    </View >
+  );
+};
+
+export default ProductListing;
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\RetailProduct\RetailProduct.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-native';
+import { useTailwind } from 'tailwind-rn';
+import React from 'react';
+import { useState, useEffect } from 'react';
+
+export default RetailProduct = ({ crop }) => {
+    const TomatoPNG = require("../../assets/vegetables/tomato.jpg");
+    return (
+        <View
+            key={crop.id}
+            className=" border border-1  w-full py-1 rounded-md flex flex-row gap-2 items-center"
+            style={{
+                backgroundColor: '#8b987e', margin: 0, padding: 0,
+                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8, shadowRadius: 2, elevation: 5
+            }}
+        >
+            <View
+                className="h-full flex flex-row justify-center items-center p-0 m-0"
+                style={{
+                    margin: 0
+                }}
+            >
+                <Image
+                    source={TomatoPNG}
+                    className="rounded-lg"
+                    style={{
+                        width: 150, height: 150, borderRadius: 10
+                    }}
+                />
+            </View>
+            <View className="h-full">
+
+                <View className="flex flex-row gap-1">
+                    {/* <Text className="font-bold text-white">{crop.Quantity}</Text> */}
+                    <Text className="font-bold text-2xl text-white">{crop.CropName}</Text>
+                </View>
+                <View className="flex flex-col gap-1">
+                    <Text className="font-light text-md text-white">Quantity: {crop.Quantity}</Text>
+                    <Text className="font-light text-md text-white">Type: {crop.CropType}</Text>
+                    <Text className="font-light text-md text-white">Type of Listing: {crop.TypeOfListing}</Text>
+                    <Text className="font-semibold text-md text-white">
+                        {
+                            crop.TypeOfListing === 'Retail' ? `Price: ₹${crop.Price}` : `Starting Bid: ₹${crop.StartingBid}`
+                        }
+                    </Text>
+                    <Pressable
+                        className="bg-green-500 p-2 rounded-lg flex flex-row justify-center items-center
+                        border border-1
+                        active:bg-green-700 active:shadow-lg active:ring-2 active:ring-green-300
+                        "
+                        style={{
+                            borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                            shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                            shadowOpacity: 1, shadowRadius: 2, elevation: 5
+                        }}
+                    >
+                        <Text>
+                            Add to Cart
+                        </Text>
+                    </Pressable>
+                </View>
+            </View>
+
+        </View>
+    )
+}
+
+
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\WholesaleProduct\WholesaleProduct.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-native';
+import { useTailwind } from 'tailwind-rn';
+import React from 'react';
+import { useState, useEffect } from 'react';
+
+export default WholesaleProduct = ({crop}) => {
+    const TomatoPNG = require("../../assets/vegetables/tomato.jpg");
+    return (
+        <View
+            key={crop.id}
+            className=" border border-1  w-full py-1 rounded-md flex flex-row gap-2 items-center"
+            style={{
+                backgroundColor: '#8b987e', margin: 0, padding: 0,
+                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8, shadowRadius: 2, elevation: 5
+            }}
+        >
+            <View
+                className="h-full flex flex-row justify-center items-center p-0 m-0"
+                style={{
+                    margin: 0
+                }}
+            >
+                <Image
+                    source={TomatoPNG}
+                    className="rounded-lg"
+                    style={{
+                        width: 150, height: 150, borderRadius: 10
+                    }}
+                />
+            </View>
+            <View className="h-full">
+
+                <View className="flex flex-row gap-1">
+                    {/* <Text className="font-bold text-white">{crop.Quantity}</Text> */}
+                    <Text className="font-bold text-2xl text-white">{crop.CropName}</Text>
+                </View>
+                <View className="flex flex-col gap-1">
+                    <Text className="font-light text-md text-white">Quantity: {crop.Quantity}</Text>
+                    <Text className="font-light text-md text-white">Type: {crop.CropType}</Text>
+                    <Text className="font-light text-md text-white">Type of Listing: {crop.TypeOfListing}</Text>
+                    <Text className="font-semibold text-md text-white">
+                        {
+                            crop.TypeOfListing === 'Retail' ? `Price: ₹${crop.Price}` : `Starting Bid: ₹${crop.StartingBid}`
+                        }
+                    </Text>
+                    <Pressable
+                        className="bg-green-500 p-2 rounded-lg flex flex-row justify-center items-center
+                        border border-1
+                        active:bg-green-700 active:shadow-lg active:ring-2 active:ring-green-300
+                        "
+                        style={{
+                            borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                            shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                            shadowOpacity: 1, shadowRadius: 2, elevation: 5
+                        }}
+                    >
+                        <Text>
+                            Start Bidding
+                        </Text>
+                    </Pressable>
+                </View>
+            </View>
+
+        </View>
+    )
+}
+
+
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\Home\Home.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, ScrollView } from 'react-native';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import ProductListing from '../ProductListing/ProductListing';
+
+const Home = () => {
+
+  const [isTheButtonPressed, setIsTheButtonPressed] = useState(false);
+
+  function onPress() {
+    if (isTheButtonPressed) {
+      setIsTheButtonPressed(false);
+    } else {
+      setIsTheButtonPressed(true);
+    }
+  }
+
+  return (
+    <ScrollView  className='h-screen w-full bg-yellow-50 pt-3 pb-6'>
+      <View className="bg-yellow-50  flex flex-1 flex-col gap-2 items-center mb-40">
+        <View className="w-96  rounded-lg flex flex-col items-center p-2 py-4 border border-1"
+          style={{backgroundColor: 'rgba(0, 0, 0, 0.1)', borderColor: 'rgba(0, 0, 0, 0.1)'}}
+        >
+          <View>
+            <Text className="text-black font-bold text-xl text-center mt-4">Welcome to FarmConnect</Text>
+          </View>
+          <View>
+            <Text className="text-black font-light text-md text-center mt-1">One Stop Platform for all Market Access</Text>
+          </View>
+
+          <View >
+            <Pressable
+              onPress={onPress}
+              className="
+                bg-yellow-100 border-black rounded-3xl
+                flex flex-row justify-center
+                items-center mt-8 mb-4 p-2 
+                active:bg-yellow-200 active:shadow-lg active:ring-2 active:ring-yellow-300
+              "
+              style={{
+                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                shadowOpacity: 1, shadowRadius: 2, elevation: 5
+            }}
+            >
+              <Text >Go to Listing Page</Text>
+            </Pressable>
+          </View>
+
+        </View>
+
+        {
+          isTheButtonPressed &&
+          <View 
+            className="
+              w-96 rounded-lg flex flex-col items-center p-2 border border-1
+            "
+            style={{backgroundColor: 'rgba(0, 0, 0, 0.1)', borderColor: 'rgba(0, 0, 0, 0.1)'}}
+          >
+            <ProductListing isTheButtonPressed={isTheButtonPressed} ></ProductListing>
+          </View>
+
+        }
+      </View>
+
+    </ScrollView>
+  );
+}
+
+export default Home;
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\ProductListing\ProductListing.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-native';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import RetailProduct from '../RetailProduct/RetailProduct';
+import WholesaleProduct from '../WholesaleProduct/WholesaleProduct';
+
+const ProductListing = ({ isTheButtonPressed }) => {
+  const [cropListing, setCropListing] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+
+  useEffect(() => {
+    fetch('https://8p0ch0bz-3000.inc1.devtunnels.ms/getListings')
+      .then((response) => response.json())
+      .then((json) => setCropListing(json.cropListings))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <View className="w-full flex flex-col items-center">
+      <Text className="font-bold text-2xl text-black mb-5">Retail Listing</Text>
+      <View className="flex flex-col items-center gap-4 w-full ">
+        {cropListing.map((crop, index) => {
+          if (crop.TypeOfListing === 'Retail') {
+            return (
+              <View
+                className="w-full mx-auto"
+              >
+                <RetailProduct key={crop._id} crop={crop} />
+              </View>
+            )
+          } else {
+            return (
+              <View
+                className="w-full mx-auto"
+              >
+                <WholesaleProduct key={index} crop={crop} />
+              </View>
+            )
+          }
+        }
+        )}
+      </View>
+    </View >
+  );
+};
+
+export default ProductListing;
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\RetailProduct\RetailProduct.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-native';
+import { useTailwind } from 'tailwind-rn';
+import React from 'react';
+import { useState, useEffect } from 'react';
+
+export default RetailProduct = ({ crop }) => {
+    const TomatoPNG = require("../../assets/vegetables/tomato.jpg");
+    return (
+        <View
+            key={crop.id}
+            className=" border border-1  w-full py-1 rounded-md flex flex-row gap-2 items-center"
+            style={{
+                backgroundColor: '#8b987e', margin: 0, padding: 0,
+                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8, shadowRadius: 2, elevation: 5
+            }}
+        >
+            <View
+                className="h-full flex flex-row justify-center items-center p-0 m-0"
+                style={{
+                    margin: 0
+                }}
+            >
+                <Image
+                    source={TomatoPNG}
+                    className="rounded-lg"
+                    style={{
+                        width: 150, height: 150, borderRadius: 10
+                    }}
+                />
+            </View>
+            <View className="h-full">
+
+                <View className="flex flex-row gap-1">
+                    {/* <Text className="font-bold text-white">{crop.Quantity}</Text> */}
+                    <Text className="font-bold text-2xl text-white">{crop.CropName}</Text>
+                </View>
+                <View className="flex flex-col gap-1">
+                    <Text className="font-light text-md text-white">Quantity: {crop.Quantity}</Text>
+                    <Text className="font-light text-md text-white">Type: {crop.CropType}</Text>
+                    <Text className="font-light text-md text-white">Type of Listing: {crop.TypeOfListing}</Text>
+                    <Text className="font-semibold text-md text-white">
+                        {
+                            crop.TypeOfListing === 'Retail' ? `Price: ₹${crop.Price}` : `Starting Bid: ₹${crop.StartingBid}`
+                        }
+                    </Text>
+                    <Pressable
+                        className="bg-green-500 p-2 rounded-lg flex flex-row justify-center items-center
+                        border border-1
+                        active:bg-green-700 active:shadow-lg active:ring-2 active:ring-green-300
+                        "
+                        style={{
+                            borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                            shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                            shadowOpacity: 1, shadowRadius: 2, elevation: 5
+                        }}
+                    >
+                        <Text>
+                            Add to Cart
+                        </Text>
+                    </Pressable>
+                </View>
+            </View>
+
+        </View>
+    )
+}
+
+
+
+// File: \Users\pavan\Documents\GitHub\FarmConnect\components\WholesaleProduct\WholesaleProduct.jsx
+import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-native';
+import { useTailwind } from 'tailwind-rn';
+import React from 'react';
+import { useState, useEffect } from 'react';
+
+export default WholesaleProduct = ({crop}) => {
+    const TomatoPNG = require("../../assets/vegetables/tomato.jpg");
+    return (
+        <View
+            key={crop.id}
+            className=" border border-1  w-full py-1 rounded-md flex flex-row gap-2 items-center"
+            style={{
+                backgroundColor: '#8b987e', margin: 0, padding: 0,
+                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.8, shadowRadius: 2, elevation: 5
+            }}
+        >
+            <View
+                className="h-full flex flex-row justify-center items-center p-0 m-0"
+                style={{
+                    margin: 0
+                }}
+            >
+                <Image
+                    source={TomatoPNG}
+                    className="rounded-lg"
+                    style={{
+                        width: 150, height: 150, borderRadius: 10
+                    }}
+                />
+            </View>
+            <View className="h-full">
+
+                <View className="flex flex-row gap-1">
+                    {/* <Text className="font-bold text-white">{crop.Quantity}</Text> */}
+                    <Text className="font-bold text-2xl text-white">{crop.CropName}</Text>
+                </View>
+                <View className="flex flex-col gap-1">
+                    <Text className="font-light text-md text-white">Quantity: {crop.Quantity}</Text>
+                    <Text className="font-light text-md text-white">Type: {crop.CropType}</Text>
+                    <Text className="font-light text-md text-white">Type of Listing: {crop.TypeOfListing}</Text>
+                    <Text className="font-semibold text-md text-white">
+                        {
+                            crop.TypeOfListing === 'Retail' ? `Price: ₹${crop.Price}` : `Starting Bid: ₹${crop.StartingBid}`
+                        }
+                    </Text>
+                    <Pressable
+                        className="bg-green-500 p-2 rounded-lg flex flex-row justify-center items-center
+                        border border-1
+                        active:bg-green-700 active:shadow-lg active:ring-2 active:ring-green-300
+                        "
+                        style={{
+                            borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                            shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                            shadowOpacity: 1, shadowRadius: 2, elevation: 5
+                        }}
+                    >
+                        <Text>
+                            Start Bidding
+                        </Text>
+                    </Pressable>
+                </View>
+            </View>
+
+        </View>
+    )
+}

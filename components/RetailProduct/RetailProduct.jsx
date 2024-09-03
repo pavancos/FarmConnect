@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 
 export default RetailProduct = ({ crop }) => {
     const TomatoPNG = require("../../assets/vegetables/tomato.jpg");
+    const productImage = crop.ImageUrl ? { uri: crop.ImageUrl } : require("../../assets/vegetables/tomato.jpg");
     return (
         <View
             key={crop.id}
