@@ -2,9 +2,27 @@ import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-n
 import { useTailwind } from 'tailwind-rn';
 import React from 'react';
 import { useState, useEffect } from 'react';
-
+const imageMap = {
+    tomato: require('../../assets/vegetables/tomato.jpg'),
+    potato: require('../../assets/vegetables/potato.jpg'),
+    onion: require('../../assets/vegetables/onion.jpg'),
+    carrot: require('../../assets/vegetables/carrot.jpg'),
+    capsicum: require('../../assets/vegetables/capsicum.jpg'),
+    brinjal: require('../../assets/vegetables/brinjal.jpg'),
+    broccoli: require('../../assets/vegetables/broccoli.jpg'),
+    chilly: require('../../assets/vegetables/chilly.jpg'),
+    cabbage: require('../../assets/vegetables/cabbage.jpg'),
+    corn: require('../../assets/vegetables/corn.jpg'),
+    cauliflower: require('../../assets/vegetables/cauliflower.jpg'),
+    greenbeans: require('../../assets/vegetables/greenbeans.jpg'),
+    greenpeas: require('../../assets/vegetables/greenpeas.jpg'),
+    lettuce: require('../../assets/vegetables/lettuce.jpg'),
+    pumpkin: require('../../assets/vegetables/pumpkin.jpg'),
+    radish: require('../../assets/vegetables/radish.jpg'),
+    spinach: require('../../assets/vegetables/spinach.jpg'),
+};
 export default WholesaleProduct = ({crop}) => {
-    const TomatoPNG = require("../../assets/vegetables/tomato.jpg");
+    const imageSource = imageMap[crop.CropName.toLowerCase()] || require("../../assets/vegetables/tomato.jpg");
     return (
         <View
             className=" border border-1  w-full py-1 rounded-md flex flex-row gap-2 items-center"
@@ -22,7 +40,7 @@ export default WholesaleProduct = ({crop}) => {
                 }}
             >
                 <Image
-                    source={TomatoPNG}
+                    source={imageSource}
                     className="rounded-lg"
                     style={{
                         width: 150, height: 150, borderRadius: 10
