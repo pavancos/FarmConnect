@@ -15,7 +15,7 @@ const ProductListing = () => {
       const json = await response.json();
       setCropListing(json.cropListings);
     } catch (error) {
-      console.error(error);
+      console.error(error," ",error.stack);
     } finally {
       setLoading(false);
     }
@@ -34,6 +34,7 @@ const ProductListing = () => {
     fetch('https://8p0ch0bz-3000.inc1.devtunnels.ms/getListings')
       .then((response) => {
         return response.json();
+
       })
       .then((json) => setCropListing(json.cropListings))
       .catch((error) => console.error(error))

@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Button, Pressable, Alert, Image } from 'react-native';
+import { TextInput } from 'react-native';
 import { useTailwind } from 'tailwind-rn';
 import React from 'react';
 import { useState, useEffect } from 'react';
@@ -21,11 +22,17 @@ const imageMap = {
     radish: require('../../assets/vegetables/radish.jpg'),
     spinach: require('../../assets/vegetables/spinach.jpg'),
 };
-export default WholesaleProduct = ({crop}) => {
+export default WholesaleProduct = ({ crop }) => {
     const imageSource = imageMap[crop.CropName.toLowerCase()] || require("../../assets/vegetables/tomato.jpg");
+    const [isBidding, setIsBidding] = useState(false);
+    const [bid, setBid] = useState('');
+    const handleBid = () => {
+        Alert.alert('Bid Submitted', `You have submitted a bid of ₹${bid}`);
+        setIsBidding(false);
+    }
     return (
         <View
-            className=" border border-1  w-full py-1 rounded-md flex flex-row gap-2 items-center"
+            className=" border border-1  w-full py-1 rounded-md flex flex-col gap-2"
             style={{
                 backgroundColor: '#8b987e', margin: 0, padding: 0,
                 borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
@@ -34,54 +41,102 @@ export default WholesaleProduct = ({crop}) => {
             }}
         >
             <View
-                className="h-full flex flex-row justify-center items-center p-0 m-0"
-                style={{
-                    margin: 0
-                }}
+                className="flex flex-row gap-2 items-center"
             >
-                <Image
-                    source={imageSource}
-                    className="rounded-lg"
+
+                <View
+                    className="h-full flex flex-row justify-center items-center p-0 m-0"
                     style={{
-                        width: 150, height: 150, borderRadius: 10
+                        margin: 0
                     }}
-                />
-            </View>
-            <View className="h-full">
-
-                <View className="flex flex-row gap-1">
-                    {/* <Text className="font-bold text-white">{crop.Quantity}</Text> */}
-                    <Text className="font-bold text-2xl text-white">{crop.CropName}</Text>
-                </View>
-                <View className="flex flex-col gap-1">
-                    <Text className="font-light text-md text-white">Quantity: {crop.Quantity}</Text>
-                    <Text className="font-light text-md text-white">Type: {crop.CropType}</Text>
-                    <Text className="font-light text-md text-white">Type of Listing: {crop.TypeOfListing}</Text>
-                    <Text className="font-semibold text-md text-white">
-                        {
-                            crop.TypeOfListing === 'Retail' ? `Price: ₹${crop.Price}` : `Starting Bid: ₹${crop.StartingBid}`
-                        }
-                    </Text>
-                    <Pressable
-                        className="bg-green-500 p-2 rounded-lg flex flex-row justify-center items-center
-                        border border-1
-                        active:bg-green-700 active:shadow-lg active:ring-2 active:ring-green-300
-                        "
+                >
+                    <Image
+                        source={imageSource}
+                        className="rounded-lg"
                         style={{
-                            borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
-                            shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
-                            shadowOpacity: 1, shadowRadius: 2, elevation: 5
+                            width: 150, height: 150, borderRadius: 10
                         }}
-                    >
-                        <Text>
-                            Start Bidding
+                    />
+                </View>
+                <View className="h-full">
+
+                    <View className="flex flex-row gap-1">
+                        {/* <Text className="font-bold text-white">{crop.Quantity}</Text> */}
+                        <Text className="font-bold text-2xl text-white">{crop.CropName}</Text>
+                    </View>
+                    <View className="flex flex-col gap-1">
+                        <Text className="font-light text-md text-white">Quantity: {crop.Quantity}</Text>
+                        <Text className="font-light text-md text-white">Type: {crop.CropType}</Text>
+                        <Text className="font-light text-md text-white">Type of Listing: {crop.TypeOfListing}</Text>
+                        <Text className="font-semibold text-md text-white">
+                            {
+                                crop.TypeOfListing === 'Retail' ? `Price: ₹${crop.Price}` : `Starting Bid: ₹${crop.StartingBid}`
+                            }
                         </Text>
-                    </Pressable>
+                        <Pressable
+                            className="bg-green-500 p-2 rounded-lg flex flex-row justify-center items-center
+                            border border-1
+                            active:bg-green-700 active:shadow-lg active:ring-2 active:ring-green-300
+                            "
+                            style={{
+                                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                                shadowOpacity: 1, shadowRadius: 2, elevation: 5
+                            }}
+                            onPress={() => setIsBidding(!isBidding)}
+                        >
+                            <Text>
+                                Start Bidding
+                            </Text>
+                        </Pressable>
+                    </View>
                 </View>
             </View>
+            {isBidding && (
+                <View
+                    className="flex flex-col gap-2"
+                >
 
+                    <View>
+                        <Text>Enter your bid</Text>
+                        <TextInput
+                            style={styles.input}
+                            keyboardType="numeric"
+                            value={bid}
+                            onChangeText={setBid}
+                        />
+                        <Pressable
+                            onPress={handleBid}
+                            className="
+                                bg-yellow-100 border-black rounded-3xl
+                                flex flex-row justify-center
+                                items-center mt-8 mb-4 p-2 
+                                active:bg-yellow-200 active:shadow-lg active:ring-2 active:ring-yellow-300
+                            "
+                            style={{
+                                borderColor: 'rgba(0, 0, 0, 0.1)', borderWidth: 0.5,
+                                shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOffset: { width: 2, height: 2 },
+                                shadowOpacity: 1, shadowRadius: 2, elevation: 5
+                            }}
+                        >
+                            <Text >Submit Bid</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            )}
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+        width: 200,
+        borderColor: 'black'
+    },
+});
 
 
